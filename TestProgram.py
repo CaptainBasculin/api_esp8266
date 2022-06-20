@@ -3,7 +3,6 @@
 from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 import pandas as pd
-import ast
 import csv
 import requests
 import datetime
@@ -35,8 +34,17 @@ class RGBset(Resource):
         parser = reqparse.RequestParser()
         
         rawRGB = str(request.args['input'])
+        #find two spaces
+        counter = 0
+        for i in rawRGB:
+            if i == ' ':
+                counter = counter + 1
+            else: 
+                if counter == 0:
 
-        
+
+
+
         r = request.args['r']
         b = request.args['b']
         g = request.args['g']
@@ -78,7 +86,7 @@ class sensorUpdate(Resource):
 
             if temp == None:
                 req_form = "http://api.weatherapi.com/v1/current.json?key=66f1a059a7b24189b3701909222006&q=Istanbul&aqi=no"
-                data['temperature'] = requests.get(req_form).json()['current']['temp_c']
+                data['temperature'] = requests.get(req_form).json()['current']['temp_c'] + round(((random.random()*2)*2-1),2)
             else:
                 data['temperature'] = temp
             
@@ -111,9 +119,9 @@ class sensorUpdate(Resource):
                 new_data = pd.DataFrame({
             'temperature': data['temperature'],
             'monoxide': data['monoxide'],
-            'red': int(data['red'][0])/6,
-            'green': int(data['green'][0])/6,
-            'blue': int(data['blue'][0])/6,
+            'red': int(data['red'][0])/3,
+            'green': int(data['green'][0])/3,
+            'blue': int(data['blue'][0])/3,
             'status': data['status'],
             'pressure': data['pressure']})
 
